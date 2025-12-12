@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       // event.getUsers
       // event.getUser -> event.getCreator
       Event.belongsToMany(models.User, {
-        foreignKey: { name: 'eventId', allowNull: fasle },
+        foreignKey: { name: 'eventId', allowNull: false },
         through: 'Participation',
         as: 'event',
         onDelete: 'CASCADE',
