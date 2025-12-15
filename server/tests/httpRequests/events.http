@@ -1,0 +1,17 @@
+### 10 events
+GET http://localhost:5000/api/events HTTP/1.1
+
+### 2 events
+GET http://localhost:5000/api/events?creatorId=5 HTTP/1.1
+
+### []
+GET http://localhost:5000/api/events?creatorId=6 HTTP/1.1
+
+### 2 events
+GET http://localhost:5000/api/events?isOnline=true&creatorId=5 HTTP/1.1
+
+### 1 events
+GET http://localhost:5000/api/events?isOnline=false&creatorId=2 HTTP/1.1
+
+### 2 events
+GET http://localhost:5000/api/events?isOnline=false&creatorId=1&categoryId=2,3 HTTP/1.1
