@@ -15,3 +15,57 @@ GET http://localhost:5000/api/events?isOnline=false&creatorId=2 HTTP/1.1
 
 ### 2 events
 GET http://localhost:5000/api/events?isOnline=false&creatorId=1&categoryId=2,3 HTTP/1.1
+
+#--------------------------------------------------------------------------------------
+###
+POST http://localhost:5000/api/creator/1/events HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "Tech Conference",
+  "description": "A conference for developers and tech enthusiasts.",
+  "datetime": "2026-02-15T10:00:00Z",
+  "isOnline": true,
+  "location": "Tech Hub",
+  "categoryId": 3
+}
+
+#--------------------------------------------------------------------------------------
+### 201
+PATCH  http://localhost:5000/api/creator/1/events/11 HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "Tech Conference 2027",
+  "description": "A conference for developers and tech enthusiasts.",
+  "datetime": "2026-02-15T10:00:00Z",
+  "isOnline": false,
+  "location": "Tech Hub, Main Street 123",
+  "categoryId": 2
+}
+
+### 403
+PATCH  http://localhost:5000/api/creator/2/events/11 HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "Tech Conference 2025",
+  "description": "A conference for developers and tech enthusiasts.",
+  "datetime": "2026-02-15T10:00:00Z",
+  "isOnline": false,
+  "location": "Tech Hub, Main Street 123",
+  "categoryId": 2
+}
+
+### 404
+PATCH  http://localhost:5000/api/creator/2/events/1000 HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "Tech Conference 2020",
+  "description": "A conference for developers and tech enthusiasts.",
+  "datetime": "2026-02-15T10:00:00Z",
+  "isOnline": false,
+  "location": "Tech Hub, Main Street 123",
+  "categoryId": 2
+}

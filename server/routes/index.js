@@ -6,7 +6,7 @@ const creatorEventsRouter = require('./creatorEventsRouter');
 const router = Router();
 
 router.use('/users', usersRouter);
-router.use('/creator/:creatorId/events', creatorEventsRouter);
+router.use('/creator', creatorEventsRouter);
 
 router.use('/events', eventsRouter);
 
