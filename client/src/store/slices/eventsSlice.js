@@ -7,6 +7,9 @@ const initialState = {
   events: [],
   isFetching: false,
   error: null,
+  filter: {
+    isOnline: '',
+  },
 };
 
 export const getEventsThunk = createAsyncThunk(
@@ -15,7 +18,7 @@ export const getEventsThunk = createAsyncThunk(
     try {
       const {
         data: { data },
-      } = await httpApi.getEvents();
+      } = await httpApi.getEvents(payload);
       return data;
     } catch (err) {
       return rejectWithValue(err);
@@ -26,7 +29,11 @@ export const getEventsThunk = createAsyncThunk(
 const eventsSlice = createSlice({
   name: EVENTS_SLICE_NAME,
   initialState,
-  reducers: {},
+  reducers: {
+    setFilter: (state, { payload }) => {
+      state.filter = { ...state.filter, ...payload };
+    },
+  },
   extraReducers: builder => {
     builder.addCase(getEventsThunk.pending, state => {
       state.isFetching = true;
@@ -47,6 +54,6 @@ const eventsSlice = createSlice({
 
 const { reducer, actions } = eventsSlice;
 
-// export{}=actions
+export const { setFilter } = actions;
 
 export default reducer;
