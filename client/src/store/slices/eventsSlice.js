@@ -9,6 +9,7 @@ const initialState = {
   error: null,
   filter: {
     isOnline: '',
+    categoryId: [], // [1, 2]
   },
 };
 
@@ -33,6 +34,17 @@ const eventsSlice = createSlice({
     setFilter: (state, { payload }) => {
       state.filter = { ...state.filter, ...payload };
     },
+    changeCategoriesFilter: (state, { payload }) => {
+      const foundCategoryIndex = state.filter.categoryId.findIndex(
+        c => c === payload
+      );
+
+      if (foundCategoryIndex === -1) {
+        state.filter.categoryId.push(payload);
+      } else {
+        state.filter.categoryId.splice(foundCategoryIndex, 1);
+      }
+    },
   },
   extraReducers: builder => {
     builder.addCase(getEventsThunk.pending, state => {
@@ -54,6 +66,6 @@ const eventsSlice = createSlice({
 
 const { reducer, actions } = eventsSlice;
 
-export const { setFilter } = actions;
+export const { setFilter, changeCategoriesFilter } = actions;
 
 export default reducer;
