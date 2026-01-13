@@ -32,6 +32,9 @@ const eventsSlice = createSlice({
   initialState,
   reducers: {
     setFilter: (state, { payload }) => {
+      if (typeof payload.categoryId === 'number') {
+        payload.categoryId = [payload.categoryId];
+      }
       state.filter = { ...state.filter, ...payload };
     },
     changeCategoriesFilter: (state, { payload }) => {

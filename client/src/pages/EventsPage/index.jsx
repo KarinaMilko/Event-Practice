@@ -1,28 +1,60 @@
 import { connect } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
+import queryString from 'query-string';
+import { useEffect, useRef } from 'react';
 import {
   changeCategoriesFilter,
   getEventsThunk,
   setFilter,
 } from '../../store/slices/eventsSlice';
-import { useEffect } from 'react';
 import { getCategoriesThunk } from '../../store/slices/categoriesSlice';
 
 function EventsPage({
   getEvents,
   getCategories,
+  setFilter,
   changeCategoriesFilter,
   events,
-  filter,
-  setFilter,
   isFetching,
   errors,
+  filter,
   categories,
 }) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isSetFilterFromPage = useRef(false);
+
   useEffect(() => {
     getCategories();
   }, []);
 
   useEffect(() => {
+    if (!isSetFilterFromPage.current) {
+      const filterFromUrl = queryString.parse(searchParams.toString(), {
+        parseNumbers: true,
+      });
+      if (!('isOnline' in filterFromUrl)) {
+        filterFromUrl.isOnline = '';
+      }
+      if (!('categoryId' in filterFromUrl)) {
+        filterFromUrl.categoryId = [];
+      }
+
+      setFilter(filterFromUrl);
+    } else {
+      isSetFilterFromPage.current = false;
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (isSetFilterFromPage.current) {
+      const filterToSearchParams = { ...filter };
+      if (filter.isOnline === '') {
+        delete filterToSearchParams.isOnline;
+      }
+
+      setSearchParams(filterToSearchParams);
+    }
+
     getEvents(filter);
   }, [filter]);
 
@@ -37,6 +69,7 @@ function EventsPage({
           <select
             value={isOnline}
             onChange={e => {
+              isSetFilterFromPage.current = true;
               setFilter({ isOnline: e.target.value });
             }}
           >
@@ -52,7 +85,10 @@ function EventsPage({
               <input
                 type="checkbox"
                 checked={selectedCategories.includes(c.id)}
-                onChange={() => changeCategoriesFilter(c.id)}
+                onChange={() => {
+                  isSetFilterFromPage.current = true;
+                  changeCategoriesFilter(c.id);
+                }}
               />
               {c.name}
             </label>
